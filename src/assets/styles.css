@@ -1,8 +1,8 @@
 body {
   background: linear-gradient(
     to right,
-    rgb(199, 25, 25),
-    rgb(12, 140, 190)
+    rgb(0, 0, 0),
+    rgb(0, 0, 0)
   );
   font-family: "Times New Roman", sans-serif;
 }
