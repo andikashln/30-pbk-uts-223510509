@@ -1,122 +1,64 @@
 <template>
-  <div class="wrapper">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-      <!-- ... -->
-    </nav>
-
-    <div class="container py-5">
-      <div class="row d-flex justify-content-center align-items-center">
-        <div class="col-10">
-          <div class="card rounded">
-            <div class="card-body p-5">
-              <!-- Title and total tasks -->
-              <h3 class="mb-3 fw-bold">
-                To-Do List
-                <span class="badge bg-primary rounded-pill ms-3 fs-6 fw-normal">{{ totalTodo }} task</span>
-              </h3>
-
-              <!-- Todo Component -->
-              <TodoComponent
-                :todos="todos"
-                @add-todo="addTodo"
-                @delete-todo="deleteTodo"
-                @done-todo="doneTodo"
-                @save-edit="saveEdit"
-              />
-
-              <!-- User and Post Component -->
-              <UserPostComponent
-                :users="users"
-                :posts="posts"
-                @select-user="fetchPosts"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div>
+    <header class="header">
+      <nav class="menu">
+        <ul>
+          <li><router-link to="/">🏠 Home</router-link></li>
+          <li><router-link to="/todos">📝 Todos</router-link></li>
+          <li><router-link to="/posts">✉️ Posts</router-link></li>
+          <li><router-link to="/albums">📷 Albums</router-link></li>
+          <li><router-link to="/about">ℹ️ About</router-link></li>
+        </ul>
+      </nav>
+    </header>
+    <router-view></router-view>
   </div>
 </template>
 
-<script>
-import TodoComponent from './components/TodoComponent.vue';
-import UserPostComponent from './components/UserPostComponent.vue';
-
-export default {
-  components: {
-    TodoComponent,
-    UserPostComponent,
-  },
-  data() {
-    return {
-      todos: [],
-      posts: [],
-      users: [],
-    };
-  },
-  mounted() {
-    if (localStorage.getItem("todos") !== null) {
-      this.todos = JSON.parse(localStorage.getItem("todos"));
-    }
-    this.fetchUsers();
-  },
-  methods: {
-    addTodo(todo) {
-      if (todo.trim() !== "") {
-        this.todos.unshift({
-          activity: todo,
-          isDone: false,
-        });
-        this.saveToLocalStorage();
-      }
-    },
-    deleteTodo(index) {
-      this.todos.splice(index, 1);
-      this.saveToLocalStorage();
-    },
-    doneTodo(index) {
-      this.todos[index].isDone = !this.todos[index].isDone;
-      this.saveToLocalStorage();
-    },
-    saveEdit({ index, text }) {
-      if (text.trim() !== "") {
-        this.todos[index].activity = text;
-        this.saveToLocalStorage();
-      }
-    },
-    saveToLocalStorage() {
-      localStorage.setItem("todos", JSON.stringify(this.todos));
-    },
-    async fetchUsers() {
-      try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/users');
-        const data = await response.json();
-        this.users = data;
-      } catch (error) {
-        console.error('Error fetching users:', error);
-      }
-    },
-    async fetchPosts(userId) {
-      if (!userId) return;
-      try {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/posts?userId=${userId}`);
-        const data = await response.json();
-        this.posts = data;
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    },
-  },
-  computed: {
-    totalTodo() {
-      return this.todos.length;
-    },
-  },
-};
-</script>
-
 <style>
-@import "./assets/styles.css";
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #f0f4f8, #d9e2ec);
+}
+
+.header {
+  background-color: #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+}
+
+.menu ul {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu ul li {
+  margin: 0 20px;
+}
+
+.menu ul li a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 10px 20px;
+  transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  border-radius: 5px;
+  text-transform: capitalize;
+}
+
+.menu ul li a:hover {
+  background-color: #ff0000;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.menu ul li a:active {
+  background-color: #ff0000;
+  transform: scale(1.05);
+}
 </style>
-``
